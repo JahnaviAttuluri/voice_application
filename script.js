@@ -1,17 +1,12 @@
-// Check if browser supports Speech Recognition
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 
 recognition.lang = 'en-US';
 recognition.interimResults = false;
-
-// Start Listening when button is clicked
 document.getElementById('start-btn').addEventListener('click', () => {
     recognition.start();
     document.getElementById('output').innerText = "Listening...";
 });
-
-// Handle Voice Input
 recognition.onresult = function(event) {
     let voiceCommand = event.results[0][0].transcript.toLowerCase();
     document.getElementById('output').innerText = `You said: "${voiceCommand}"`;
@@ -39,15 +34,11 @@ function processCommand(command) {
         speak("Sorry, I didn't understand that.");
     }
 }
-
-// Convert Text to Speech
 function speak(text) {
     let speech = new SpeechSynthesisUtterance(text);
     speech.lang = "en-US";
     speechSynthesis.speak(speech);
 }
-
-// Handle Errors
 recognition.onerror = function(event) {
     document.getElementById('output').innerText = "Error occurred: " + event.error;
 };

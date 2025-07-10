@@ -2,6 +2,25 @@
 const startBtn = document.getElementById('start-btn');
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+function getWikipediaSummary(topic) {
+  const searchTerm = topic.trim().split(' ').join('_'); // Replace spaces with _
+  const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${searchTerm}`;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      if (data.extract) {
+        console.log(data.extract);
+        speak(data.extract); // Use your speak() function
+      } else {
+        speak("Sorry, I couldn't find information on that topic.");
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      speak("Sorry, something went wrong while fetching Wikipedia.");
+    });
+}
 
 if (SpeechRecognition) {
   const recognition = new SpeechRecognition();

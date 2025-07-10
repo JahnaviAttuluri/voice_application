@@ -1,4 +1,4 @@
-const output = document.getElementById('output');
+  const output = document.getElementById('output');
 const startBtn = document.getElementById('start-btn');
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -21,19 +21,23 @@ if (SpeechRecognition) {
       const city = transcript.split("weather in")[1].trim();
       getWeather(city);
     } else {
-      speak("Sorry, I didn't recognize that. Try saying: weather in Hyderabad.");
+      const message = "Sorry, I didn't understand. Try saying: weather in Hyderabad.";
+      output.innerHTML += `<p>${message}</p>`;
+      speak(message);
     }
   };
 
   recognition.onerror = (event) => {
-    output.innerHTML += `<p class="text-danger"><strong>Error:</strong> ${event.error}</p>`;
+    const message = `Error occurred: ${event.error}`;
+    output.innerHTML += `<p class="text-danger">${message}</p>`;
+    speak("Sorry, an error occurred.");
   };
 } else {
   output.innerHTML = `<p class="text-danger">Speech Recognition not supported in this browser.</p>`;
 }
 
 function getWeather(city) {
-  const apiKey = '834c3cbbb30cb34a16e9c6f30c7a66bd';
+  const apiKey = '834c3cbbb30cb34a16e9c6f30c7a66bd'; 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
 
   fetch(url)
@@ -42,16 +46,18 @@ function getWeather(city) {
       if (data.cod === 200) {
         const temp = data.main.temp;
         const desc = data.weather[0].description;
-        const message = `The weather in ${city} is ${temp}°C with ${desc}.`;
+        const message = `The weather in ${city} is ${temp} degrees Celsius with ${desc}.`;
         output.innerHTML += `<p>${message}</p>`;
         speak(message);
       } else {
-        output.innerHTML += `<p class="text-danger">City not found.</p>`;
-        speak("Sorry, I couldn't find the weather for that city.");
+        const message = "Sorry, I couldn't find that city.";
+        output.innerHTML += `<p class="text-danger">${message}</p>`;
+        speak(message);
       }
     })
     .catch(error => {
-      output.innerHTML += `<p class="text-danger">Error: ${error}</p>`;
+      const message = `Error fetching weather: ${error}`;
+      output.innerHTML += `<p class="text-danger">${message}</p>`;
       speak("Something went wrong fetching the weather.");
     });
 }
